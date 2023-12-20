@@ -22,9 +22,7 @@ export class GoogleWalletConnector extends DedicatedWalletConnector {
     constructor(config: { chains?: Chain[]; options: DedicatedWalletOptions }) {
       super(config)
       this.magicSdkConfiguration = config.options.magicSdkConfiguration
-      this.oauthProviders = config.options.oauthOptions?.providers || []
-      this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
-      this.enableEmailLogin = config.options.enableEmailLogin
+      this.oauthCallbackUrl = config.options.callbackUrl
       this.magicOptions = config.options
     }
 

@@ -3,11 +3,11 @@ import { DedicatedWalletConnector, DedicatedWalletOptions } from "./dedicatedWal
 
 /**
  * Email Wallet Connector class used to connect to wallet using email and Magic Auth.
- * Requires passing the user's email address in the connect method.
+ * Requires setting the email address using `setEmail`.
  * 
  * @example
  * ```typescript
- * import { Email Wallet Connector } from 'arch-protocol/wagmi-connector';
+ * import { EmailWalletConnector } from 'arch-protocol/wagmi-connector';
  * const connector = new EmailWalletConnector({
  *  options: {
  *     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
@@ -24,14 +24,12 @@ export class EmailWalletConnector extends DedicatedWalletConnector {
     constructor(config: { chains?: Chain[]; options: DedicatedWalletOptions }) {
       super(config)
       this.magicSdkConfiguration = config.options.magicSdkConfiguration
-      this.oauthProviders = []
-      this.enableEmailLogin = true
       this.magicOptions = config.options
       this.email = ''
     }
 
     /**
-     * Ser the user's email address
+     * Set the user's email address, necessary for connecting to a wallet
      */
     setEmail(email: string) {
       this.email = email
@@ -79,7 +77,7 @@ export class EmailWalletConnector extends DedicatedWalletConnector {
       const magic = this.getMagicSDK()
   
       // LOGIN WITH MAGIC USING EMAIL
-      await magic.auth.loginWithMagicLink({
+      await magic.auth.loginWithEmailOTP({
         email: this.email,
       })
   

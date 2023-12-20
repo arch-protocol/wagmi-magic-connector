@@ -10,11 +10,7 @@ import { Magic } from 'magic-sdk'
 import { MagicConnector, MagicOptions } from './magicConnector'
 
 export interface DedicatedWalletOptions extends MagicOptions {
-  enableEmailLogin: boolean
-  oauthOptions?: {
-    providers: OAuthProvider[]
-    callbackUrl?: string
-  }
+  callbackUrl?: string
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
@@ -46,17 +42,13 @@ export abstract class DedicatedWalletConnector extends MagicConnector {
     string,
     MagicSDKExtensionsOption<OAuthExtension['name']>
   >
-  enableEmailLogin: boolean
-  oauthProviders: OAuthProvider[]
   oauthCallbackUrl?: string
   magicOptions: MagicOptions
 
   constructor(config: { chains?: Chain[]; options: DedicatedWalletOptions }) {
     super(config)
     this.magicSdkConfiguration = config.options.magicSdkConfiguration
-    this.oauthProviders = config.options.oauthOptions?.providers || []
-    this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
-    this.enableEmailLogin = config.options.enableEmailLogin
+    this.oauthCallbackUrl = config.options.callbackUrl
     this.magicOptions = config.options
   }
 
