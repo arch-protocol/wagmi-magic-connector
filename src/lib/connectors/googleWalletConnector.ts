@@ -1,0 +1,86 @@
+import { Chain, UserRejectedRequestError } from "viem";
+import { DedicatedWalletConnector, DedicatedWalletOptions } from "./dedicatedWalletConnector";
+
+/**
+ * Google Wallet Connector class used to connect to wallet using Google Oauth and Magic Auth.
+ * 
+ * @example
+ * ```typescript
+ * import { GoogleWalletConnector } from 'arch-protocol/wagmi-connector';
+ * const connector = new GoogleWalletConnector({
+ *  options: {
+ *     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
+ *    ...Other options
+ *  },
+ * });
+ * ```
+ * @see https://github.com/arch-protocol/wagmi-magic-connector#-usage
+ * @see https://magic.link/docs/dedicated/overview
+ */
+export class GoogleWalletConnector extends DedicatedWalletConnector {
+
+    constructor(config: { chains?: Chain[]; options: DedicatedWalletOptions }) {
+      super(config)
+      this.magicSdkConfiguration = config.options.magicSdkConfiguration
+      this.oauthProviders = config.options.oauthOptions?.providers || []
+      this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
+      this.enableEmailLogin = config.options.enableEmailLogin
+      this.magicOptions = config.options
+    }
+
+    /**
+     * Connect method attempts to connects to wallet using Google Oauth
+     */
+    async connect() {
+      if (!this.magicOptions.apiKey)
+        throw new Error('Magic API Key is not provided.')
+  
+      const provider = await this.getProvider()
+  
+      if (provider?.on) {
+        provider.on('accountsChanged', this.onAccountsChanged)
+        provider.on('chainChanged', this.onChainChanged)
+        provider.on('disconnect', this.onDisconnect)
+      }
+  
+      // Check if we have a chainId, in case of error just assign 0 for legacy
+      let chainId: number
+      try {
+        chainId = await this.getChainId()
+      } catch {
+        chainId = 0
+      }
+  
+      // if there is a user logged in, return the user
+      if (await this.isAuthorized()) {
+        return {
+          provider,
+          chain: {
+            id: chainId,
+            unsupported: false,
+          },
+          account: await this.getAccount(),
+        }
+      }
+  
+      const magic = this.getMagicSDK()
+  
+      // LOGIN WITH MAGIC USING OAUTH PROVIDER
+      await magic.oauth.loginWithRedirect({
+        provider: "google",
+        redirectURI: this.oauthCallbackUrl || window.location.href,
+      })
+  
+      if (await magic.user.isLoggedIn())
+        return {
+          account: await this.getAccount(),
+          chain: {
+            id: chainId,
+            unsupported: false,
+          },
+          provider,
+        }
+      throw new UserRejectedRequestError(Error('User Rejected Request'))
+    }
+
+}
