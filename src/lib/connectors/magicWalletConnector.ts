@@ -10,8 +10,8 @@ type Keys = keyof typeof connection;
 type ConnectionType = typeof connection[Keys];
 
 /**
- * Email Wallet Connector class used to connect to wallet using email and Magic Auth.
- * Requires setting the email address using `setEmail`.
+ * Magic Wallet Connector class used to connect to wallet using email and Magic OAuth.
+ * Requires setting the email address using `setEmail` in case of OTP email login.
  * 
  * @example
  * ```typescript
@@ -40,11 +40,18 @@ export class MagicWalletConnector extends DedicatedWalletConnector {
     }
 
     /**
-     * Set the user's email address, necessary for connecting to a wallet
+     * Set the user's email address, necessary for connecting to a wallet with email
      */
     setEmail(email: string) {
       this.connectionType = connection.email
       this.email = email
+    }
+
+    /**
+     * Set the OAuth callback URL, necessary for connecting to a wallet with google
+     */
+    setOauthCallback(callbackUrl: string) {
+      this.oauthCallbackUrl = callbackUrl
     }
 
     /**
