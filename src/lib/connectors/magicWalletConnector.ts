@@ -51,6 +51,7 @@ export class MagicWalletConnector extends DedicatedWalletConnector {
      * Set the OAuth callback URL, necessary for connecting to a wallet with google
      */
     setOauthCallback(callbackUrl: string) {
+      this.connectionType = connection.google
       this.oauthCallbackUrl = callbackUrl
     }
 
