@@ -27,16 +27,24 @@ export interface MagicOptions {
  */
 export abstract class MagicConnector extends Connector {
   ready = !IS_SERVER
-  readonly id = 'magic'
+  id = 'magic'
   readonly name = 'Magic'
   isModalOpen = false
 
-  protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
+  protected constructor(config: {
+    id?: string
+    chains?: Chain[]
+    options: MagicOptions
+  }) {
     super(config)
     if (!config.options.apiKey) {
       throw new Error(
         'Magic API Key is required. Get one at https://dashboard.magic.link/',
       )
+    }
+
+    if (config.id) {
+      this.id = config.id
     }
   }
 
