@@ -44,6 +44,7 @@ export abstract class DedicatedWalletConnector extends MagicConnector {
   >
   oauthCallbackUrl?: string
   magicOptions: MagicOptions
+  email?: string
 
   constructor(config: { chains?: Chain[]; options: DedicatedWalletOptions }) {
     super(config)
@@ -80,7 +81,12 @@ export abstract class DedicatedWalletConnector extends MagicConnector {
       if (isLoggedIn) return true
 
       const result = await magic.oauth.getRedirectResult()
-      return result !== null
+      if (result !== null) {
+        this.email = result.magic.userMetadata.email ?? ''
+        return true
+    }
+
+    return false
     } catch {}
     return false
   }

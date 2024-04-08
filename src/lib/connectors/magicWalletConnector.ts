@@ -30,7 +30,6 @@ type ConnectionType = typeof connection[Keys]
  * @see https://magic.link/docs/dedicated/overview
  */
 export class MagicWalletConnector extends DedicatedWalletConnector {
-  email: string
   connectionType: ConnectionType
 
   constructor(config: {
@@ -107,7 +106,7 @@ export class MagicWalletConnector extends DedicatedWalletConnector {
     const magic = this.getMagicSDK()
 
     // LOGIN WITH MAGIC USING EMAIL
-    if (this.connectionType === connection.email)
+    if (this.connectionType === connection.email && this.email)
       await magic.auth.loginWithEmailOTP({
         email: this.email,
       })
