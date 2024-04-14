@@ -82,7 +82,7 @@ export abstract class DedicatedWalletConnector extends MagicConnector {
 
       const result = await magic.oauth.getRedirectResult()
       if (result !== null) {
-        this.email = result.magic.userMetadata.email ?? ''
+        this.email = result.oauth.userInfo.email ?? ''
         return true
     }
 
