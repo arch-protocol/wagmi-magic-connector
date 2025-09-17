@@ -1,8 +1,7 @@
-import type { OAuthExtension, OAuthProvider } from '@magic-ext/oauth2';
+import type { OAuthProvider } from '@magic-ext/oauth2';
 import { createConnector } from '@wagmi/core';
 import { type Address, UserRejectedRequestError, getAddress } from 'viem';
 import { createModal } from '../modal/view';
-import { MagicSDKAdditionalConfiguration } from '../types';
 import { normalizeChainId } from '../utils';
 import { IS_SERVER, type MagicConnectorParams, type MagicOptions, magicConnector } from './magicConnector';
 
@@ -38,7 +37,7 @@ interface DedicatedWalletOptions extends MagicOptions {
     providers: OAuthProvider[];
     callbackUrl?: string;
   };
-  magicSdkConfiguration?: MagicSDKAdditionalConfiguration<string, OAuthExtension[]>;
+  magicSdkConfiguration?: any;
   showUI?: boolean;
 }
 
